@@ -1,43 +1,38 @@
 package com.example.catalogservice.service;
 
-import com.example.catalogservice.entity.Book;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
+import lombok.Getter;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Getter
 public class CartService {
-    private static final ObjectMapper mapper = new ObjectMapper();
-    private static final HttpClient httpClient = HttpClient.newBuilder().build();
-    private List<String> cart;
-
+    private final List<String> cart = new ArrayList<>();
 
     public void addBookToCart(String book) {
         cart.add(book);
     }
 
     public String getFormattedCartContents() {
-        StringBuilder formattedContents = new StringBuilder();
-        formattedContents.append("Your Cart: ");
-        for (String book : cart) {
-            int quantity = getQuantityOfBook(book);
-            formattedContents.append("\"").append(book).append("\", ").append(quantity).append("; ");
-        }
-        return formattedContents.toString();
-    }
+        if (cart.isEmpty()) {
+            return "Your Cart: empty";
+        } else {
+            Map<String, Integer> bookQuantities = new HashMap<>();
 
-    public int getQuantityOfBook(String bookName) {
-        int quantity = 0;
-        for (String book : cart) {
-            if (book.equalsIgnoreCase(bookName)) {
-                quantity++;
+            for (String book : cart) {
+                bookQuantities.put(book, bookQuantities.getOrDefault(book, 0) + 1);
             }
+
+            StringBuilder formattedContents = new StringBuilder();
+            formattedContents.append("Your Cart: ");
+            for (Map.Entry<String, Integer> entry : bookQuantities.entrySet()) {
+                String book = entry.getKey();
+                int quantity = entry.getValue();
+                formattedContents.append("\"").append(book).append("\", ").append(quantity).append("; ");
+            }
+            return formattedContents.toString();
         }
-        return quantity;
     }
 }

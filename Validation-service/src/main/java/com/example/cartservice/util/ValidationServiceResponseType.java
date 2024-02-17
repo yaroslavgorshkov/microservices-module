@@ -1,8 +1,7 @@
-package com.example.cartservice;
+package com.example.cartservice.util;
 
 public enum ValidationServiceResponseType {
     OK,
     OUT_OF_STOCK,
-    BOOK_NOT_FOUND,
-    EMPTY_STROKE
+    BOOK_NOT_FOUND
 }

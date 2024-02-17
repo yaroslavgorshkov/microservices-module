@@ -1,5 +1,6 @@
 package com.example.catalogservice.service;
 
+import com.example.catalogservice.wrapper.ValidationServiceResponseTypeWrapper;
 import com.example.catalogservice.util.OtherService;
 import com.example.catalogservice.util.ValidationServiceResponseType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,31 +17,25 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
 public class ValidationService {
-    private static final ObjectMapper mapper = new ObjectMapper();
-    private static final HttpClient httpClient = HttpClient.newBuilder().build();
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final HttpClient httpClient = HttpClient.newBuilder().build();
 
     @SneakyThrows
     public ValidationServiceResponseType getValidationStatus(String bookName) {
-        ObjectMapper mapper = new ObjectMapper();
+        String urlWithParams = OtherService.VALIDATION.getUrl() + "?bookName=" + URLEncoder.encode(bookName, StandardCharsets.UTF_8);
 
-        // Формирование объекта запроса в формате JSON
-        ObjectNode requestBody = mapper.createObjectNode();
-        requestBody.put("bookName", bookName);
-
-        // Отправка запроса
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
-                .uri(URI.create(OtherService.VALIDATION.getUrl()))
+                .POST(HttpRequest.BodyPublishers.noBody())
+                .uri(URI.create(urlWithParams))
                 .timeout(Duration.of(10, ChronoUnit.SECONDS))
-                .header("Content-Type", "application/json")
                 .build();
 
-        // Получение ответа
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         String jsonString = response.body();
 
-        // Преобразование JSON-строки в объект
-        return mapper.readValue(jsonString, ValidationServiceResponseType.class);
-    }
+        ValidationServiceResponseTypeWrapper receivedWrapper = mapper.readValue(jsonString, ValidationServiceResponseTypeWrapper.class);
+        ValidationServiceResponseType receivedResponseType = receivedWrapper.getResponseType();
 
+        return receivedResponseType;
+    }
 }

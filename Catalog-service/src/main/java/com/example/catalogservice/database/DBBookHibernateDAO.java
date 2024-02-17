@@ -1,4 +1,4 @@
-package com.example.catalogservice.dao;
+package com.example.catalogservice.database;
 
 import com.example.catalogservice.entity.Book;
 import jakarta.persistence.EntityManager;
@@ -9,7 +9,7 @@ import java.util.Optional;
 public class DBBookHibernateDAO implements DAO<Book> {
 
     @Override
-    public Book save(Book obj) {
+    public void save(Book obj) {
         try (EntityManager entityManager = ConnectionManager.getEntityManager()) {
             try {
                 entityManager.getTransaction().begin();
@@ -20,11 +20,10 @@ public class DBBookHibernateDAO implements DAO<Book> {
                 throw new RuntimeException(e);
             }
         }
-        return obj;
     }
 
     @Override
-    public Book update(Book obj) {
+    public void update(Book obj) {
         try (EntityManager entityManager = ConnectionManager.getEntityManager()) {
             try {
                 entityManager.getTransaction().begin();
@@ -35,7 +34,6 @@ public class DBBookHibernateDAO implements DAO<Book> {
                 throw new RuntimeException(e);
             }
         }
-        return obj;
     }
 
     @Override

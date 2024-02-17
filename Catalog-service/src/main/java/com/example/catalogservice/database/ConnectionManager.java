@@ -1,4 +1,4 @@
-package com.example.cartservice;
+package com.example.catalogservice.database;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

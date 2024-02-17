@@ -5,19 +5,13 @@ import java.util.List;
 
 import com.example.catalogservice.entity.Book;
 import com.example.catalogservice.service.CatalogService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 @WebServlet("/catalog-servlet")
 public class CatalogServlet extends HttpServlet {
-    private CatalogService catalogService;
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private final CatalogService catalogService = new CatalogService();
 
-    @Override
-    public void init() {
-        catalogService = new CatalogService();
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -31,9 +25,9 @@ public class CatalogServlet extends HttpServlet {
         out.println("<h1>Catalog:</h1>");
         out.println("<pre>" + convertedResponse + "</pre>");
 
-        out.println("<form method=\"get\" action=\"/Catalog_service_war_exploded/cart-servlet\">");
-        out.println("Введите название книги: <input type=\"text\" name=\"bookName\" placeholder=\"Введите название книги\"><br>");
-        out.println("<input type=\"submit\" value=\"Добавить в корзину\">");
+        out.println("<form method=\"post\" action=\"/Catalog_service/cart-servlet\">");
+        out.println("Enter the title of the book: <input type=\"text\" name=\"bookName\" placeholder=\"Enter the title of the book\"><br>");
+        out.println("<input type=\"submit\" value=\"Add to cart\">");
         out.println("</form>");
 
         out.println("</body></html>");

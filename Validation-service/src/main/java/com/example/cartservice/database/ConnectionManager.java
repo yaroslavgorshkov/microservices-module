@@ -1,4 +1,4 @@
-package com.example.catalogservice.dao;
+package com.example.cartservice.database;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
